@@ -3,6 +3,7 @@ package com.alog.logistica.api.controller;
 
 import com.alog.logistica.domain.model.Customer;
 import com.alog.logistica.domain.repository.CustomerRepository;
+import com.alog.logistica.domain.service.CatalogCustomerService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,9 @@ import java.util.List;
 public class CustomerController {
 
     private CustomerRepository customerRepository;
+    private CatalogCustomerService catalogCustomerService;
+
+
 
     @GetMapping
     public List<Customer> listar() {
@@ -36,7 +40,7 @@ public class CustomerController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Customer create(@Valid @RequestBody Customer customer) {
-        return customerRepository.save(customer);
+        return catalogCustomerService.save(customer);
     }
 
     @PutMapping("/{customer_id}")
@@ -47,7 +51,7 @@ public class CustomerController {
         }
         // success updating customer by id and saving
         customer.setId(customer_id);
-        customer = customerRepository.save(customer);
+        customer = catalogCustomerService.save(customer);
 
         return ResponseEntity.ok(customer);
     }
@@ -59,7 +63,7 @@ public class CustomerController {
             return ResponseEntity.notFound().build();
         }
         // success deleting with void content aka noContent
-        customerRepository.deleteById(customer_id);
+        catalogCustomerService.delete(customer_id);
         return ResponseEntity.noContent().build();
     }
 
